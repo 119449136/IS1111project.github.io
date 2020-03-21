@@ -1,0 +1,15 @@
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\bin\Debug\YourStyle.exe.config
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\bin\Debug\YourStyle.exe
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\bin\Debug\YourStyle.pdb
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\bin\Debug\YourStyle.xml
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.vbprojAssemblyReference.cache
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.frmSelectUser.resources
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.Resources.resources
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.frmPayment.resources
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.vbproj.GenerateResource.cache
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.vbproj.CoreCompileInputs.cache
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.exe
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.xml
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.pdb
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.frmCustomerLogin.resources
+C:\Users\Sarah\Documents\BIS\First Year\Semester 2\IS1111  Programming for Info Systems 2\Project\YourStyle\YourStyle\obj\Debug\YourStyle.frmCreateAccount.resources
