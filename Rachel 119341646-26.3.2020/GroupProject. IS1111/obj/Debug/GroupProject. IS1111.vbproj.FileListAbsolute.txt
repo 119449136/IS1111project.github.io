@@ -1,0 +1,26 @@
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\bin\Debug\GroupProject.IS1111.exe.config
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\bin\Debug\GroupProject.IS1111.exe
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\bin\Debug\GroupProject.IS1111.pdb
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\bin\Debug\GroupProject.IS1111.xml
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\obj\Debug\GroupProject. IS1111.vbprojAssemblyReference.cache
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.frmLogin.resources
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.Resources.resources
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\obj\Debug\GroupProject. IS1111.vbproj.GenerateResource.cache
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\obj\Debug\GroupProject. IS1111.vbproj.CoreCompileInputs.cache
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.exe
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.xml
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.pdb
+C:\Users\rache\Documents\GroupProject. IS1111\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.frmYourstyle.resources
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\bin\Debug\GroupProject.IS1111.exe.config
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\bin\Debug\GroupProject.IS1111.exe
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\bin\Debug\GroupProject.IS1111.pdb
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\bin\Debug\GroupProject.IS1111.xml
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\obj\Debug\GroupProject. IS1111.vbprojAssemblyReference.cache
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.frmLogin.resources
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.Resources.resources
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.frmYourstyle.resources
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\obj\Debug\GroupProject. IS1111.vbproj.GenerateResource.cache
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\obj\Debug\GroupProject. IS1111.vbproj.CoreCompileInputs.cache
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.exe
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.xml
+C:\Users\rache\Documents\Rachel 119341646-26.3.2020\GroupProject. IS1111\obj\Debug\GroupProject.IS1111.pdb
