@@ -1,0 +1,26 @@
+C:\Users\rache\Documents\database\database\bin\Debug\IS1111database.accdb
+C:\Users\rache\Documents\database\database\bin\Debug\database.exe.config
+C:\Users\rache\Documents\database\database\bin\Debug\database.exe
+C:\Users\rache\Documents\database\database\bin\Debug\database.pdb
+C:\Users\rache\Documents\database\database\bin\Debug\database.xml
+C:\Users\rache\Documents\database\database\obj\Debug\database.vbprojAssemblyReference.cache
+C:\Users\rache\Documents\database\database\obj\Debug\database.frmDatabase.resources
+C:\Users\rache\Documents\database\database\obj\Debug\database.Resources.resources
+C:\Users\rache\Documents\database\database\obj\Debug\database.vbproj.GenerateResource.cache
+C:\Users\rache\Documents\database\database\obj\Debug\database.vbproj.CoreCompileInputs.cache
+C:\Users\rache\Documents\database\database\obj\Debug\database.exe
+C:\Users\rache\Documents\database\database\obj\Debug\database.xml
+C:\Users\rache\Documents\database\database\obj\Debug\database.pdb
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\bin\Debug\IS1111database.accdb
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\bin\Debug\database.exe.config
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\bin\Debug\database.exe
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\bin\Debug\database.pdb
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\bin\Debug\database.xml
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\obj\Debug\database.vbprojAssemblyReference.cache
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\obj\Debug\database.frmDatabase.resources
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\obj\Debug\database.Resources.resources
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\obj\Debug\database.vbproj.GenerateResource.cache
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\obj\Debug\database.vbproj.CoreCompileInputs.cache
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\obj\Debug\database.exe
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\obj\Debug\database.xml
+C:\Users\rache\Documents\Rachel 119341646- 01.04.20\database\obj\Debug\database.pdb
