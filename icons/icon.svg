@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Poker Trainer">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1c5c46"/>
+      <stop offset="1" stop-color="#0c2b22"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f4d284"/>
+      <stop offset="1" stop-color="#d9a833"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="114" fill="url(#bg)"/>
+  <rect x="18" y="18" width="476" height="476" rx="98" fill="none" stroke="rgba(255,255,255,.10)" stroke-width="3"/>
+  <g transform="translate(256 244)">
+    <path fill="url(#gold)" d="M0-132C-30-84-118-46-118 16c0 39 30 66 66 66 20 0 36-8 46-21-4 40-16 66-32 86h76c-16-20-28-46-32-86 10 13 26 21 46 21 36 0 66-27 66-66C118-46 30-84 0-132Z"/>
+  </g>
+</svg>

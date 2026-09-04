@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Poker Trainer</title>
+<meta name="description" content="Play no-limit hold'em against bots and get your decisions graded, hand by hand.">
+<meta name="theme-color" content="#0b0e13">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Poker Trainer">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="stylesheet" href="styles/app.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Setup ------------------------------------------------------------- -->
+  <section class="screen active" id="screen-setup">
+    <header class="topbar">
+      <h1>Poker Trainer</h1>
+      <span class="spacer"></span>
+    </header>
+    <div class="scroll" id="setup-body"></div>
+  </section>
+
+  <!-- Table ------------------------------------------------------------- -->
+  <section class="screen" id="screen-table">
+    <div class="table-head">
+      <button class="icon-btn" id="leave-table" aria-label="Leave the table">‹</button>
+      <span class="pill" id="hand-no">Hand 1</span>
+      <span class="pill" id="blind-info"></span>
+      <span class="spacer" style="flex:1"></span>
+      <span class="pill" id="session-net"></span>
+      <button class="icon-btn" id="table-settings" aria-label="Settings">⚙</button>
+    </div>
+    <div class="felt-wrap">
+      <div class="felt"></div>
+      <div id="seats"></div>
+      <div class="board-area" id="board"></div>
+    </div>
+    <div class="coach-strip" id="coach"></div>
+    <div class="actionbar" id="actionbar"></div>
+  </section>
+
+  <!-- Progress ---------------------------------------------------------- -->
+  <section class="screen" id="screen-progress">
+    <header class="topbar"><h1>Progress</h1></header>
+    <div class="scroll" id="progress-body"></div>
+  </section>
+
+  <!-- Practice ---------------------------------------------------------- -->
+  <section class="screen" id="screen-practice">
+    <header class="topbar"><h1>Practice</h1></header>
+    <div class="scroll" id="practice-body"></div>
+  </section>
+
+  <!-- History ----------------------------------------------------------- -->
+  <section class="screen" id="screen-history">
+    <header class="topbar"><h1>Hands</h1></header>
+    <div class="scroll" id="history-body"></div>
+  </section>
+
+  <nav class="tabbar" role="tablist">
+    <button data-screen="setup" role="tab" aria-selected="true"><span class="ico">♠</span>Play</button>
+    <button data-screen="progress" role="tab" aria-selected="false"><span class="ico">📈</span>Progress</button>
+    <button data-screen="practice" role="tab" aria-selected="false"><span class="ico">🎯</span>Practice</button>
+    <button data-screen="history" role="tab" aria-selected="false"><span class="ico">🗂</span>Hands</button>
+  </nav>
+</div>
+
+<div class="sheet-backdrop" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheet-title">
+  <div class="sheet">
+    <div class="grab"></div>
+    <div class="sheet-head">
+      <h2 id="sheet-title"></h2>
+      <span style="flex:1"></span>
+      <button class="icon-btn" id="sheet-close" aria-label="Close">✕</button>
+    </div>
+    <div class="sheet-body" id="sheet-body"></div>
+    <div class="sheet-foot" id="sheet-foot"></div>
+  </div>
+</div>
+
+<script type="module" src="src/main.js"></script>
+</body>
+</html>
