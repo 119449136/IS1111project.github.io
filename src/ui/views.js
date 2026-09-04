@@ -45,7 +45,7 @@ export function renderSetup(app) {
     }));
 
   const coachButtons = h('div', { class: 'chip-row' },
-    [['instant', 'After each move'], ['end-of-hand', 'End of hand'], ['off', 'Silent']].map(([key, label]) => h('button', {
+    COACH_MODES.map(([key, label]) => h('button', {
       class: 'chip-toggle',
       text: label,
       'aria-pressed': String(s.coachMode === key),
@@ -91,6 +91,12 @@ export function renderSetup(app) {
     h('button', { class: 'btn ghost wide', text: 'Settings', onClick: () => showSettings(app) }),
   );
 }
+
+const COACH_MODES = [
+  ['instant', 'After each move'],
+  ['end-of-hand', 'End of hand'],
+  ['off', 'Silent'],
+];
 
 const coachHint = (mode) => ({
   instant: 'Every move is graded the moment you make it. Best for learning.',
@@ -419,7 +425,25 @@ export function showSettings(app) {
       h('div', { class: 't' }, h('b', { text: title }), h('span', { text: note })), btn);
   };
 
+  const coachButtons = h('div', { class: 'chip-row' },
+    COACH_MODES.map(([key, label]) => h('button', {
+      class: 'chip-toggle',
+      text: label,
+      'aria-pressed': String(s.coachMode === key),
+      onClick: (e) => {
+        app.updateSettings({ coachMode: key });
+        for (const b of coachButtons.children) b.setAttribute('aria-pressed', 'false');
+        e.currentTarget.setAttribute('aria-pressed', 'true');
+        qs('#coach-hint').textContent = coachHint(key);
+        app.refreshCurrentScreen();
+      },
+    })));
+
   const body = h('div', {},
+    h('div', { class: 'card-panel' },
+      h('h2', { text: 'Coaching' }),
+      coachButtons,
+      h('div', { class: 'hint', id: 'coach-hint', style: { marginTop: '9px' }, text: coachHint(s.coachMode) })),
     h('div', { class: 'card-panel' },
       h('h2', { text: 'Display' }),
       toggle('fourColourDeck', 'Four-colour deck', 'Each suit gets its own colour, which makes flush draws obvious.'),

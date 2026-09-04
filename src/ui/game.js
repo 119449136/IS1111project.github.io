@@ -234,6 +234,12 @@ export class Game {
     this.render();
     this.renderActions();
 
+    // In end-of-hand mode the player asked to be left alone during the hand,
+    // so the review is brought to them once it is over.
+    if (this.settings.coachMode === 'end-of-hand' && this.pendingReviews.length) {
+      this.later(() => this.showHandReview(), 900);
+      return;
+    }
     if (this.settings.autoAdvance && summary.lossInBB < 0.4) {
       this.later(() => this.dealNextHand(), 1900);
     }

@@ -82,6 +82,37 @@ async function playFor(page, iterations, preferIndex = 1) {
   if (shots) await page.screenshot({ path: `${shots}/review.png` });
   await page.click('#sheet-close');
 
+  // The "Why?" link on the coach strip must open its explanation.
+  await playFor(page, 40);
+  if (await page.locator('#coach.show .more').count()) {
+    await page.locator('#coach.show .more').click();
+    await page.waitForTimeout(300);
+    check('the coach explains its reasoning on request', await page.locator('#sheet-body .review .note').count() > 0);
+    await page.click('#sheet-close');
+  }
+
+  // Settings are reachable from the table and change the coaching mode.
+  await page.click('#table-settings');
+  await page.waitForTimeout(300);
+  check('settings open from the table', await page.locator('#sheet.open').count() > 0);
+  await page.locator('#sheet-body .chip-toggle:has-text("End of hand")').click();
+  check('coaching mode can be changed', await page.evaluate(() => window.__pokerApp.settings.coachMode) === 'end-of-hand');
+  await page.click('#sheet-close');
+
+  // End-of-hand mode should bring the review up on its own.
+  let auto = false;
+  for (let i = 0; i < 200; i++) {
+    await page.waitForTimeout(120);
+    if (await page.locator('#sheet.open').count()) { auto = true; break; }
+    // Once the hand is over, wait for the review rather than dealing on,
+    // which would cancel it exactly as a real tap would.
+    if (await page.locator('#actionbar button:has-text("Next hand")').count()) continue;
+    const buttons = page.locator('#actionbar .action-row button');
+    if (await buttons.count()) await buttons.nth(Math.min(1, await buttons.count() - 1)).click();
+  }
+  check('end-of-hand coaching opens the review by itself', auto);
+  if (auto) await page.click('#sheet-close');
+
   await page.click('#leave-table');
   for (const tab of ['progress', 'practice', 'history']) {
     await page.click(`.tabbar button[data-screen="${tab}"]`);
