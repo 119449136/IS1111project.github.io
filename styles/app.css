@@ -99,6 +99,13 @@ button { cursor: pointer; border: none; background: none; }
 .topbar h1 { font-size: 17px; margin: 0; font-weight: 650; letter-spacing: -.01em; }
 .topbar .spacer { flex: 1; }
 
+.screen-foot {
+  flex-shrink: 0;
+  padding: 10px 16px 12px;
+  border-top: 1px solid var(--line-soft);
+  background: var(--bg-raised);
+}
+
 .tabbar {
   display: flex;
   border-top: 1px solid var(--line-soft);

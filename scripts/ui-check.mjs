@@ -58,7 +58,7 @@ async function playFor(page, iterations, preferIndex = 1) {
   check('setup screen renders', await page.locator('#setup-body .card-panel').count() >= 2);
   check('opponents are introduced', await page.locator('.opp-row').count() === 5);
 
-  await page.click('text=Deal me in');
+  await page.click('#deal-in');
   await page.waitForTimeout(800);
   check('six seats are dealt in', await page.locator('.seat').count() === 6);
   check('hero sees two cards', await page.locator('.seat.hero .pcard').count() === 2);
@@ -142,7 +142,7 @@ for (const [players, viewport] of [[2, { width: 390, height: 844 }], [9, { width
   const errors = watch(page, `${players}p`);
   await page.goto(BASE, { waitUntil: 'networkidle' });
   await page.click(`#setup-body .chip-row button:has-text("${players}")`);
-  await page.click('text=Deal me in');
+  await page.click('#deal-in');
   await playFor(page, 60);
   await page.waitForTimeout(300);
 
@@ -175,7 +175,7 @@ for (const [players, viewport] of [[2, { width: 390, height: 844 }], [9, { width
   await context.setOffline(true);
   await page.reload({ waitUntil: 'domcontentloaded' });
   await page.waitForTimeout(900);
-  check('the app loads with no network', await page.locator('text=Deal me in').count() > 0);
+  check('the app loads with no network', await page.locator('#deal-in').count() > 0);
   await context.close();
 }
 

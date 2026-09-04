@@ -65,6 +65,8 @@ function boot() {
   for (const btn of qsa('.tabbar button')) {
     btn.addEventListener('click', () => app.show(btn.dataset.screen));
   }
+  qs('#deal-in').addEventListener('click', () => app.startGame());
+  qs('#setup-settings').addEventListener('click', () => showSettings(app));
   qs('#leave-table').addEventListener('click', () => app.leaveTable());
   qs('#table-settings').addEventListener('click', () => showSettings(app));
   qs('#sheet').addEventListener('click', (e) => {

@@ -86,9 +86,6 @@ export function renderSetup(app) {
           h('div', { class: 'st', text: bot.style }),
           h('div', { class: 'bl', text: bot.blurb }))))),
 
-    h('button', { class: 'btn primary wide', text: 'Deal me in', onClick: () => app.startGame() }),
-    h('div', { style: { height: '10px' } }),
-    h('button', { class: 'btn ghost wide', text: 'Settings', onClick: () => showSettings(app) }),
   );
 }
 
