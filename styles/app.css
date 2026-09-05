@@ -41,6 +41,33 @@
   --mono: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, monospace;
 }
 
+/* Training extends the existing dark felt and gold interface. */
+.training { font-size: 1rem; line-height: 1.55; margin-bottom: 24px; }
+.training p { color: var(--text-dim); }
+.training h2 { font-size: 1.35rem; margin: 16px 0 8px; }
+.training h3 { font-size: 1.1rem; }
+.training .btn { min-height: 44px; white-space: normal; height: auto; margin: 6px 0; }
+.training-menu { display: grid; gap: 10px; margin: 18px 0; }
+.training-tile { display: block; text-align: left; width: 100%; padding: 18px; background: var(--bg-card); border: 1px solid var(--line); border-left: 3px solid var(--gold); border-radius: var(--radius-sm); margin-bottom: 10px; }
+.training-tile strong, .training-tile span { display: block; }
+.training-tile span { color: var(--text-dim); font-size: .9rem; margin-top: 5px; }
+.training-meta { color: var(--gold); font-size: .9rem; margin: 12px 0; }
+.training-choices { display: grid; gap: 8px; }
+.training-choices .btn { text-align: left; border: 1px solid var(--line); padding: 14px; }
+.training button:disabled { opacity: .55; cursor: default; }
+.training button:focus-visible, .training input:focus-visible, .training select:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.training select { display: block; min-height: 44px; width: 100%; background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+.training-lesson, .training-feedback:not(:empty) { padding: 16px; background: var(--bg-raised); border-radius: var(--radius); margin: 16px 0; border: 1px solid var(--line); }
+.training-score { font-size: 3rem; font-weight: 750; color: var(--gold); }
+.training-weight { display: grid; grid-template-columns: minmax(0,1fr) 70px 18px; align-items: center; gap: 8px; margin: 12px 0; }
+.training-weight input { min-width: 0; width: 100%; min-height: 44px; background: var(--bg-card); border: 1px solid var(--line); border-radius: 8px; padding: 8px; }
+.training-comparison { display: grid; gap: 4px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.training-comparison small { font-size: .875rem; color: var(--text-dim); }
+.training-bar { background: var(--line); height: 8px; border-radius: 8px; overflow: hidden; }
+.training-bar div { height: 100%; background: var(--gold); }
+.training summary { cursor: pointer; min-height: 44px; }
+.training li { margin-bottom: 10px; }
+
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 
 html, body {

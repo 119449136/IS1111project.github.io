@@ -6,7 +6,7 @@
  * background so a deployed update is picked up on the next launch.
  */
 
-const VERSION = 'poker-trainer-v1';
+const VERSION = 'poker-trainer-v2-training';
 const ASSETS = [
   './',
   './index.html',
@@ -23,6 +23,8 @@ const ASSETS = [
   './src/coach.js',
   './src/stats.js',
   './src/storage.js',
+  './src/training.js',
+  './src/ui/training.js',
   './src/ui/dom.js',
   './src/ui/game.js',
   './src/ui/views.js',

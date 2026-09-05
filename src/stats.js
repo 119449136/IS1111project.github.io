@@ -74,9 +74,11 @@ export function recordHand(profile, hand) {
   c.postflopFolds += hand.postflopFolds ?? 0;
 
   for (const review of hand.reviews ?? []) {
+    if (review.scored === false) continue;
     c.decisions++;
     c.evLoss += review.evLoss;
-    profile.grades[review.gradeKey] = (profile.grades[review.gradeKey] ?? 0) + 1;
+    const gradeKey = review.gradeKey ?? review.grade?.key;
+    profile.grades[gradeKey] = (profile.grades[gradeKey] ?? 0) + 1;
     profile.streetLoss[review.street] = (profile.streetLoss[review.street] ?? 0) + review.evLoss / hand.bigBlind;
     for (const tag of review.tags) {
       const entry = profile.leaks[tag] ?? { count: 0, evLoss: 0, lastSeen: 0, examples: [] };

@@ -16,6 +16,7 @@ import {
 import { resetProfile } from '../storage.js';
 import { h, qs, clear, cardRow, chips, signed, toast, openSheet, closeSheet } from './dom.js';
 import { reviewNode } from './game.js';
+import { trainingHub, trainingProgress } from './training.js';
 
 // ---------------------------------------------------------------- setup --
 
@@ -108,6 +109,8 @@ export function renderProgress(app) {
   const profile = app.profile;
   const stats = computeStats(profile);
 
+  root.append(trainingProgress(profile));
+
   if (stats.hands === 0) {
     root.append(h('div', { class: 'empty' },
       h('span', { class: 'big', text: '📈' }),
@@ -117,6 +120,7 @@ export function renderProgress(app) {
 
   const score = skillScore(profile);
   const trend = recentTrend(profile);
+  root.append(h('p', { class: 'sub', text: 'Game grades are simplified chart feedback, not solver EV. New post-flop notes are unscored. Older saved grades remain in historical totals.' }));
 
   root.append(h('div', { class: 'card-panel', style: { textAlign: 'center' } },
     h('div', { style: { fontSize: '11px', letterSpacing: '.09em', textTransform: 'uppercase', color: 'var(--text-faint)', fontWeight: '700' }, text: 'Decision score' }),
@@ -175,7 +179,7 @@ export function renderProgress(app) {
       }, h('b', { style: { color: 'var(--text)' }, text: `${b.full} ${b.verdict}. ` }), b.advice))));
   }
 
-  root.append(h('div', { class: 'section-title', text: 'Where the money goes' }));
+  root.append(h('div', { class: 'section-title', text: 'Heuristic penalties by street' }));
   const streets = streetBreakdown(profile);
   const worst = streets.slice().sort((a, b) => b.loss - a.loss)[0];
   const streetPanel = h('div', { class: 'card-panel' });
@@ -192,8 +196,8 @@ export function renderProgress(app) {
     class: 'sub',
     style: { marginBottom: '0', marginTop: '10px' },
     text: worst && worst.loss > 0.5
-      ? `Most of your lost value is on the ${worst.street}. That is the street to think hardest about.`
-      : 'Your losses are spread evenly, which usually means no single street is a weakness.',
+      ? `The largest recorded model penalty is on the ${worst.street}. These are study indicators, not calculated money lost.`
+      : 'No large model penalties recorded. This does not prove that every decision was correct.',
   }));
   root.append(streetPanel);
 
@@ -204,9 +208,9 @@ export function renderProgress(app) {
         class: 'sub',
         style: { marginBottom: '0' },
         text: trend.improving
-          ? `You are playing better than you were. Lost value per hand is down from ${trend.older.toFixed(2)} to ${trend.recent.toFixed(2)} big blinds.`
+          ? `Recorded heuristic penalties per hand fell from ${trend.older.toFixed(2)} to ${trend.recent.toFixed(2)}. This is not a measured change in profitability.`
           : trend.worsening
-            ? `Your recent hands have been looser than your earlier ones: ${trend.recent.toFixed(2)} big blinds lost per hand against ${trend.older.toFixed(2)} before. Slow down.`
+            ? `Recorded heuristic penalties per hand rose from ${trend.older.toFixed(2)} to ${trend.recent.toFixed(2)}. Review the saved decisions to understand why.`
             : 'Your play is steady across the session.',
       })));
   }
@@ -240,6 +244,7 @@ const statTile = (k, v, n, tone = '') =>
 
 export function renderPractice(app) {
   const root = clear(qs('#practice-body'));
+  root.append(trainingHub(app));
   const profile = app.profile;
   const stats = computeStats(profile);
   const plan = practicePlan(profile, stats);
@@ -250,7 +255,7 @@ export function renderPractice(app) {
     root.append(h('div', { class: 'leak' },
       h('div', { class: 'lh' },
         h('h3', { text: item.title }),
-        item.cost > 0.4 ? h('span', { class: 'cost', text: `-${item.cost.toFixed(1)}bb` }) : null),
+      item.cost > 0.4 ? h('span', { class: 'cost', text: 'Review' }) : null),
       h('p', { class: 'desc', text: item.detail }),
       h('div', { class: 'drill' }, h('b', { text: 'Drill' }), item.drill),
       item.count > 0
@@ -312,7 +317,7 @@ function rangeTrainer(app) {
         }));
       }
     }
-    caption.textContent = `From ${POSITION_FULL_NAMES[state.position] ?? state.position} at a ${state.players}-handed table, raise the top ${pctWidth.toFixed(0)}% of hands and fold the rest. Highlighted hands are opens.`;
+    caption.textContent = `Simplified raise-first-in chart for ${POSITION_FULL_NAMES[state.position] ?? state.position}, ${state.players}-handed: about ${pctWidth.toFixed(0)}% of combinations. Assumes nobody has entered the pot. This is a teaching baseline, not a solved strategy or a chart for facing a raise.`;
   };
 
   const buttons = h('div', { class: 'chip-row', style: { marginBottom: '11px' } },
@@ -367,7 +372,7 @@ export function renderHistory(app) {
     h('span', { class: 'mid' },
       h('span', { style: { fontSize: '13px', fontWeight: '620', display: 'block' }, text: row.position ?? '' }),
       h('span', { class: 'desc', text: row.result ?? row.verdict ?? '' })),
-    h('span', { class: `grade-badge ${tone}`, text: row.lossBB < 0.4 ? 'Clean' : `-${row.lossBB.toFixed(1)}bb` }),
+    h('span', { class: `grade-badge ${tone}`, text: row.lossBB < 0.4 ? 'Notes' : 'Review' }),
     h('span', { class: `net ${row.net >= 0 ? 'up' : 'down'}`, text: signed(row.net) })));
   }
 }

@@ -6,17 +6,16 @@
  * the player can check: a chart position before the flop, a pot-odds and
  * equity comparison after it.
  *
- * The estimates here are deliberately honest about their limits. Postflop
- * expected value is computed for the current street only and ignores what
- * happens on later ones, so the coach treats a close call as close rather than
- * pretending to a precision it does not have.
+ * Preflop grades are heuristic chart penalties, not solved EV. Postflop
+ * estimates are unscored discussion prompts because future betting and
+ * action-conditioned ranges are not solved here.
  */
 
 import { handCode, handLabel, cardsToString } from './cards.js';
 import { describe } from './evaluator.js';
-import { equity, analyseHand, outsToEquity } from './equity.js';
+import { equity, analyseHand } from './equity.js';
 import {
-  percentileOf, openRangePercent, threeBetPercent, callRangePercent,
+  percentileOf, topPercent, openRangePercent, threeBetPercent, callRangePercent,
   POSITION_FULL_NAMES,
 } from './ranges.js';
 import { positionOf, contenders, legalActions } from './engine.js';
@@ -40,7 +39,7 @@ export const LEAKS = {
   'limping': {
     title: 'Limping instead of raising',
     short: 'Calling the big blind rather than opening for a raise.',
-    drill: 'Make it a rule: if a hand is good enough to play when nobody has raised, it is good enough to raise. Fold or raise, never call.',
+    drill: 'Practise raise-or-fold when first into an unopened pot. Small-blind limps and overlimps need separate strategies; this baseline does not solve them.',
   },
   'missed-3bet': {
     title: 'Not three-betting strong hands',
@@ -55,22 +54,22 @@ export const LEAKS = {
   'over-folding': {
     title: 'Folding hands with enough equity',
     short: 'Passing on calls that show a clear profit.',
-    drill: 'When facing a small bet, count your outs before folding. Against half-pot you only need about 25 percent to continue.',
+    drill: 'Against half-pot, the showdown threshold is 25 percent. Before the river, also consider future bets and whether your outs are clean.',
   },
   'missed-value': {
     title: 'Not betting strong hands',
     short: 'Checking hands that should be extracting chips.',
-    drill: 'With top pair or better, bet. Ask "what worse hand can call?" - if there is one, there is a bet to make.',
+    drill: 'Name the worse hands that call your proposed size. Compare betting with checking; top pair alone is not a reason to bet.',
   },
   'over-bluffing': {
     title: 'Bluffing too often',
     short: 'Firing with no equity, often into players who will not fold.',
-    drill: 'Bluff only with a plan: a draw that can improve, or a board that genuinely misses the caller. Never bluff more than one opponent at a time.',
+    drill: 'Name better hands that can fold and use observed folding tendencies. Be more selective in multiway pots; a draw alone does not justify a bluff.',
   },
   'draw-chasing': {
     title: 'Chasing draws too expensively',
     short: 'Paying more for a draw than the pot is offering.',
-    drill: 'Use the rule of four and two. On the flop multiply outs by four, on the turn by two, and only continue when that beats the price.',
+    drill: 'Outs times two roughly estimates improving on the next card; times four estimates two cards. A flop call may not buy both cards, and improving may not win.',
   },
   'bet-sizing': {
     title: 'Bet sizing',
@@ -80,7 +79,7 @@ export const LEAKS = {
   'passive': {
     title: 'Playing too passively',
     short: 'Checking and calling where betting and raising win more.',
-    drill: 'For one session, take the aggressive option whenever it is close. Aggression wins pots you would otherwise lose at showdown.',
+    drill: 'Compare betting with checking or calling. Explain which worse hands call or which better hands fold before choosing aggression.',
   },
   'position': {
     title: 'Ignoring position',
@@ -129,7 +128,10 @@ export function reviewDecision(table, action, rng = Math.random) {
 
   review.context = context;
   review.action = describeAction(action, context);
-  review.grade = gradeFor(review.evLoss / table.bigBlind);
+  review.grade = review.scored === false
+    ? { key: 'study', label: 'Study estimate', tone: 'neutral' }
+    : gradeFor(review.evLoss / table.bigBlind);
+  if (table.street === 'preflop') review.notes.unshift('Simplified chart feedback; grades are heuristic penalties, not calculated EV losses.');
   review.street = table.street;
   review.handNumber = table.handNumber;
   return review;
@@ -164,6 +166,7 @@ function buildContext(table, hero, legal, rng) {
     toCall,
     board: [...board],
     boardText: cardsToString(board),
+    actionHistory: table.history.map(h => `${h.street}: ${h.position ?? h.name} ${h.action}${h.amount ? ' ' + h.amount : ''}`).join('; '),
     holeText: cardsToString(hero.holeCards),
     handCode: handCode(hero.holeCards[0], hero.holeCards[1]),
     handName: handLabel(hero.holeCards[0], hero.holeCards[1]),
@@ -199,6 +202,11 @@ function describeAction(action, ctx) {
 
 function reviewPreflop(ctx, action) {
   const { table, legal, position, handCode: code, handName } = ctx;
+  if (legal.canCheck && position === 'BB') {
+    return { evLoss: 0, ideal: 'check', idealText: 'Check', tags: [], equity: null,
+      scored: false, headline: 'Free check or a raise for a reason.',
+      notes: ['This is an unraised pot in the big blind, not a raise-first-in spot. Checking is free. A raise depends on the limpers’ ranges, your hand and the price; the opening chart does not grade it.'] };
+  }
   const hp = percentileOf(code);
   const n = table.playerCount;
   const raises = table.history.filter((h) => h.action === 'raise').length;
@@ -212,7 +220,7 @@ function reviewPreflop(ctx, action) {
 
   if (!facingRaise) {
     const openPct = openRangePercent(position, n);
-    const inRange = hp <= openPct;
+    const inRange = topPercent(openPct).has(code);
     const clearlyOut = hp > openPct * 1.6;
     const limpersBehind = table.history.filter((h) => h.action === 'call').length;
 
@@ -328,142 +336,26 @@ function reviewPreflop(ctx, action) {
 // ---------------------------------------------------------------------------
 
 function reviewPostflop(ctx, action) {
-  const { pot, toCall, read, equity: eq, bigBlind, opponentCount } = ctx;
-  const notes = [];
-  const tags = [];
-  let evLoss = 0;
-  let ideal;
-
-  const madeText = read ? describe(read.score) : '';
-  notes.push(`You hold ${madeText.toLowerCase()} on ${ctx.boardText}. Against ${opponentCount === 1 ? 'one opponent' : `${opponentCount} opponents`} that is worth about ${pct(eq)} equity.`);
-
-  if (read?.isDraw) {
-    const drawName = read.flushDraw && read.openEnded ? 'a flush draw and an open-ended straight draw'
-      : read.flushDraw ? 'a flush draw'
-        : read.openEnded ? 'an open-ended straight draw' : 'a gutshot';
-    notes.push(`You are drawing: ${drawName}, roughly ${read.outs} outs, about ${pct(outsToEquity(read.outs, read.cardsToCome))} to get there by the river.`);
-  }
-
+  const { pot, toCall, equity: eq, read } = ctx;
+  const notes = [
+    'Study estimate only: the opponent range is a simplified model, not a solved response to this betting line.',
+    `You hold ${describe(read.score).toLowerCase()} on ${ctx.boardText}. Estimated showdown equity against the model: ${pct(eq)}.`,
+  ];
+  if (read?.isDraw) notes.push(`Possible draw: about ${read.outs} candidate outs. Some outs may be unclean; reaching a draw does not guarantee winning.`);
   if (toCall > 0) {
-    // Facing a bet: the price is explicit, so grade against it.
-    const required = ctx.requiredEquity;
-    const evCall = eq * pot - (1 - eq) * toCall;
-    const impliedBonus = read?.isDraw && ctx.spr > 1.5 ? 0.04 : 0;
-    notes.push(`It costs ${toCall} into a pot of ${pot}, so you need ${pct(required)} to break even. You have ${pct(eq)}.`);
-
-    ideal = eq + impliedBonus > required ? (eq > 0.72 ? 'raise' : 'call') : 'fold';
-
-    if (action.type === 'call') {
-      if (eq + impliedBonus >= required) {
-        notes.push(`Correct call, worth about ${bb(evCall, bigBlind)} on this street alone.`);
-        if (eq > 0.75) {
-          evLoss = 0.8 * bigBlind;
-          tags.push('passive', 'missed-value');
-          notes.push('With a hand this strong, raising wins more than calling does. You are only letting them off cheaply.');
-        }
-      } else {
-        evLoss = Math.abs(evCall);
-        tags.push(read?.isDraw ? 'draw-chasing' : 'pot-odds');
-        notes.push(`The price is worse than your equity, so this call loses about ${bb(Math.abs(evCall), bigBlind)} every time you make it.`);
-        if (read?.isDraw) notes.push('A draw is only worth calling when the pot is offering the right price, or when a big enough bet is likely to be paid off later.');
-      }
-    } else if (action.type === 'fold') {
-      if (eq + impliedBonus > required + 0.06) {
-        evLoss = evCall;
-        tags.push('over-folding');
-        notes.push(`Folding gives up about ${bb(evCall, bigBlind)}. At this price the call shows a clear profit.`);
-      } else if (eq > required) {
-        evLoss = Math.max(0, evCall) * 0.5;
-        notes.push('This is close to break even, so folding is defensible, though calling is marginally better.');
-      } else {
-        notes.push('Good discipline. There was no price here and no reason to continue.');
-      }
-    } else if (action.type === 'raise') {
-      if (eq > 0.7) {
-        notes.push('Raising for value with a hand this strong is exactly right.');
-      } else if (read?.isDraw && eq > 0.35) {
-        notes.push('A semi-bluff raise. You have outs if called and you can win the pot right now, which is a good combination.');
-        evLoss = 0.2 * bigBlind;
-      } else if (eq < required) {
-        evLoss = (2 + toCall / bigBlind) * bigBlind * 0.5;
-        tags.push('over-bluffing');
-        notes.push('Raising here with no equity commits chips to a pot you will usually have to give up. There is little that folds which was beating you.');
-      } else {
-        evLoss = 1.0 * bigBlind;
-        tags.push('bet-sizing');
-        notes.push('This hand is good enough to call but turning it into a raise mostly folds out worse and keeps in better.');
-      }
-    }
-  } else {
-    // Nobody has bet. The choice is between checking and betting.
-    const strong = eq > 0.65;
-    const decent = eq > 0.5;
-    const betAmount = action.type === 'bet' || action.type === 'raise'
-      ? Math.round(action.amount - ctx.hero.bet) : 0;
-    const sizeFraction = pot > 0 ? betAmount / pot : 0;
-
-    ideal = strong || (read?.isDraw && opponentCount === 1) ? 'bet' : 'check';
-
-    if (action.type === 'check') {
-      if (strong) {
-        const missed = pot * 0.55 * Math.min(1, eq);
-        evLoss = missed;
-        tags.push('missed-value', 'passive');
-        notes.push(`Checking a hand this strong leaves money behind. A bet of around ${Math.round(pot * 0.6)} gets called by plenty of worse hands.`);
-      } else if (read?.isDraw && opponentCount === 1) {
-        evLoss = 0.5 * bigBlind;
-        tags.push('passive');
-        notes.push('Against one opponent this draw is a good candidate to bet. You can win the pot immediately and still have outs when called.');
-      } else {
-        notes.push('Checking is right. There is not enough here to bet for value and not enough reason to bluff.');
-      }
-    } else if (action.type === 'bet' || action.type === 'raise') {
-      if (strong) {
-        if (sizeFraction < 0.3) {
-          evLoss = pot * 0.2;
-          tags.push('bet-sizing');
-          notes.push(`A bet this small does not charge anyone. With ${pct(eq)} equity you want closer to ${Math.round(pot * 0.66)}.`);
-        } else if (sizeFraction > 1.6) {
-          evLoss = 0.7 * bigBlind;
-          tags.push('bet-sizing');
-          notes.push('An overbet this large usually folds out the hands you were hoping would call.');
-        } else {
-          notes.push('A clear value bet, and the sizing is sensible.');
-        }
-      } else if (decent) {
-        notes.push('A thin value bet. Reasonable against opponents who call too much, though it will sometimes run into better.');
-      } else if (read?.isDraw) {
-        if (opponentCount > 2) {
-          evLoss = 1.2 * bigBlind;
-          tags.push('over-bluffing');
-          notes.push('Semi-bluffing into three or more players rarely works. Somebody has a hand.');
-        } else {
-          notes.push('A fair semi-bluff. You have equity when called and folds when you are behind.');
-        }
-      } else {
-        evLoss = (1.5 + sizeFraction * 2) * bigBlind * (opponentCount > 1 ? 1.6 : 1);
-        tags.push('over-bluffing');
-        notes.push(`A bluff with ${pct(eq)} equity and no draw is unlikely to work${opponentCount > 1 ? ', least of all against several players' : ''}. Checking keeps the pot small and lets you give up cheaply.`);
-      }
-
-      if (ctx.spr < 3 && sizeFraction > 0.8 && !strong) {
-        tags.push('stack-management');
-        notes.push(`With only ${ctx.spr.toFixed(1)} times the pot behind, a bet this size commits you to the hand.`);
-      }
-    }
+    notes.push(`It costs ${toCall} into a pot of ${pot}, so the showdown threshold is ${pct(ctx.requiredEquity)}: call divided by pot plus call.`);
+    notes.push(ctx.street === 'river'
+      ? 'For a call that closes the action, compare this price with equity against a credible betting range. Players behind, side pots and rake can change the calculation.'
+      : 'Future betting remains. Showdown equity above this threshold does not by itself prove a profitable call: consider later bets, position and how often you realise that equity.');
   }
-
-  return {
-    evLoss: Math.max(0, evLoss),
-    ideal,
-    idealText: idealLabel(ideal, ctx),
-    notes,
-    tags: [...new Set(tags)],
-    equity: eq,
-    headline: headlineFor(evLoss / bigBlind, ideal, ctx),
-  };
+  notes.push(action.type === 'bet' || action.type === 'raise'
+    ? 'For value, name the worse hands that call this size. For a bluff, name the better hands that fold. Equity alone cannot grade this bet.'
+    : action.type === 'check'
+      ? 'Checking can retain showdown value or protect your checking range. High equity alone does not prove that betting earns more.'
+      : 'Review the opponent’s plausible value hands and bluffs before judging this decision. One revealed hand is not the whole range.');
+  return { evLoss: 0, ideal: null, idealText: null, notes, tags: [], equity: eq,
+    scored: false, headline: 'Review the range and the price.' };
 }
-
 function idealLabel(ideal, ctx) {
   switch (ideal) {
     case 'raise': return ctx.toCall > 0 ? 'Raise' : 'Bet';
@@ -486,17 +378,15 @@ function headlineFor(lossBB, ideal, ctx) {
  * A short verdict on a whole hand, built from the decisions inside it.
  */
 export function summariseHand(reviews, table) {
-  const graded = reviews.filter(Boolean);
+  const graded = reviews.filter(r => r && r.scored !== false);
   const worst = graded.slice().sort((a, b) => b.evLoss - a.evLoss)[0];
   const totalLoss = graded.reduce((s, r) => s + r.evLoss, 0);
   const tags = [...new Set(graded.flatMap((r) => r.tags))];
 
   let verdict;
-  if (graded.length === 0) verdict = 'No decisions to review.';
-  else if (totalLoss / table.bigBlind < 0.4) verdict = 'Cleanly played from start to finish.';
-  else if (totalLoss / table.bigBlind < 1.5) verdict = 'Well played overall, with one small leak.';
-  else if (totalLoss / table.bigBlind < 5) verdict = 'A reasonable hand with a costly moment in it.';
-  else verdict = 'This hand cost you chips it did not have to.';
+  if (graded.length === 0) verdict = 'Post-flop study notes available; no scored chart decisions.';
+  else if (totalLoss / table.bigBlind < 0.4) verdict = 'Pre-flop decisions matched the teaching baseline.';
+  else verdict = 'Review the pre-flop chart deviations and post-flop study notes.';
 
   return {
     verdict,

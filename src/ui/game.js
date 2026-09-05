@@ -221,6 +221,21 @@ export class Game {
         notes: r.notes,
         idealText: r.idealText,
         evLoss: r.evLoss,
+        scored: r.scored,
+        practice: {
+          cards: [...r.context.hero.holeCards],
+          board: [...r.context.board],
+          setup: `${r.context.position} · Pot ${r.context.pot} · Call ${r.context.toCall} · Stack ${r.context.stack} · ${r.context.opponentCount} opponents. ${r.context.actionHistory}`,
+          prompt: r.scored === false ? 'What should guide your review of this spot?' : 'Which action matches the coach’s simplified baseline?',
+          choices: r.scored === false
+            ? ['Range, price and future betting', 'The eventual winner', 'The opponent’s age']
+            : ['Fold', 'Check', 'Call', 'Raise', 'Bet'].filter(a => ({
+                Fold: r.context.legal.canFold, Check: r.context.legal.canCheck,
+                Call: r.context.legal.canCall, Raise: r.context.legal.canRaise && !r.context.legal.isBet,
+                Bet: r.context.legal.canRaise && r.context.legal.isBet,
+              })[a]),
+          answer: r.scored === false ? 'Range, price and future betting' : r.ideal?.[0].toUpperCase() + r.ideal?.slice(1),
+        },
       })),
     };
 
