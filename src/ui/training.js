@@ -1,4 +1,5 @@
 import { h, clear, cardRow } from './dom.js';
+import { icon } from './icons.js';
 import { POSITIONS, preflopQuestion, oddsQuestion, LESSONS, targetedLessons, savedSpots,
   recordAttempt, trainingSummary, RANGE_SCENARIOS, RANGE_HERO, RANGE_STREETS,
   rangeDistribution, distributionScore, sampleRangeHand } from '../training.js';
@@ -10,7 +11,10 @@ export function trainingProgress(profile) {
   const summary = trainingSummary(profile);
   const panel = h('div', { class: 'card-panel training' }, h('h2', { text: 'Training progress' }));
   if (!summary.some(s=>s.count)) panel.append(para('Complete a drill in Practice to start tracking your skills.'));
-  else for (const row of summary.filter(s=>s.count)) panel.append(h('p', { text: `${({ preflop:'Pre-flop', ranges:'Range Detective', theory:'Theory', odds:'Pot odds', review:'Hand review' })[row.mode]}: ${row.score}% average · ${row.count} answers` }));
+  else for (const row of summary.filter(s=>s.count)) panel.append(h('div', {class:'skill-meter'},
+    h('div',{},h('span',{text:({preflop:'Pre-flop',ranges:'Range Detective',theory:'Theory',odds:'Pot odds',review:'Hand review'})[row.mode]}),h('b',{text:`${row.score}%`})),
+    h('progress',{max:100,value:row.score,'aria-label':row.mode+' average score'}),
+    h('small',{text:`${row.count} answers · average score`})));
   panel.append(h('p', { class: 'sub', text: 'Practice scores measure agreement with the exercise. They do not predict winnings. Saved on this device; most recent 500 answers.' }));
   return panel;
 }
@@ -24,7 +28,8 @@ export function trainingHub(app) {
   };
   function home() {
     clear(host);
-    host.append(h('h2', { text: 'Build the instinct' }), para('Short exercises. Explain the decision, then practise it again.'),
+    host.append(h('div',{class:'training-intro'},h('div',{class:'eyebrow',text:'A FEW MINUTES. A SHARPER GAME.'}),h('h2', { text: 'Build the instinct.' }), para('Choose a skill. Find your rhythm.'),
+      h('span',{class:'training-count',text:'05 TRAINING MODES'})),
       h('div', { class: 'training-menu' },
         menu('Pre-flop flash trainer', '10 opening decisions. See how the same cards play from each seat.', ()=>quiz('preflop')),
         menu('Range Detective', 'Allocate probabilities, then update them across four streets.', rangePicker),
@@ -36,7 +41,12 @@ export function trainingHub(app) {
         h('ol', {}, ['Position and players left to act.', 'What range fits the action and observed behaviour?', 'What worse hands call, or better hands fold?', 'What is the price, stack depth and plan for the next street?', 'Choose deliberately. Review the decision separately from the result.'].map(t=>h('li',{text:t})))));
   }
   function menu(title, detail, action) {
-    return h('button', { class: 'training-tile', onClick: action }, h('strong',{text:title}), h('span',{text:detail}));
+    const type = ({'Pre-flop flash trainer':'cards','Range Detective':'practice','Theory practice':'theory','Pot-odds sprint':'odds','Review my decisions':'history'})[title]??'practice';
+    return h('button', { class: 'training-tile', onClick: action, data:{kind:type} },
+      h('img',{class:'training-photo',src:type==='history'?'assets/poker-room.webp':'assets/poker-study.webp',alt:'',loading:'lazy'}),
+      h('div',{class:'tile-icon'},icon(type)),
+      h('div',{class:'tile-copy'},h('strong',{text:title}), h('span',{text:detail})),
+      h('div',{class:'tile-action'},h('span',{text:'Start practice'}),icon('arrow')));
   }
   function reviewPicker() {
     clear(host);
@@ -55,6 +65,7 @@ export function trainingHub(app) {
       clear(host); answered=false;
       q = queue ? queue[index] : mode === 'preflop' ? preflopQuestion(state.position) : oddsQuestion();
       host.append(button('← Training',home), h('div',{class:'training-meta',text:`${index+1} / ${limit} · ${scores.length ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)+'% so far' : 'Take your time first'}`}));
+      host.append(h('progress',{class:'session-progress',max:limit,value:index,'aria-label':'Session progress'}));
       if(mode === 'preflop' && index === 0 && !scores.length) {
         const select = h('select', { id:'drill-position', onChange:e=>{state.position=e.target.value;draw();} },
           ['Mixed',...POSITIONS].map(p=>h('option',{value:p,selected:p===state.position,text:p})));
@@ -72,6 +83,8 @@ export function trainingHub(app) {
         if(answered)return; answered=true;
         for(const b of actions.children)b.disabled=true;
         const score=choice===q.answer ? 100 : 0; scores.push(score); persist(mode,q,score,started);
+        feedback.dataset.result = score ? 'correct' : 'review';
+        for(const b of actions.children) { if(b.textContent===q.answer)b.classList.add('answer-correct'); else if(b.textContent===choice)b.classList.add('answer-review'); }
         feedback.append(h('h3',{text:score ? 'Matches the baseline' : `Baseline answer: ${q.answer}`}),para(q.explanation));
         if(q.comparisons)feedback.append(para(q.comparisons));
         if(q.original)feedback.append(para(`Your original action: ${q.original}. This is a review exercise, not a new simulation of the hand.`));
@@ -98,6 +111,7 @@ export function trainingHub(app) {
       clear(host); const step=RANGE_STREETS[street], groups=rangeDistribution(scenario,street);
       const started=Date.now();let answered=false;
       host.append(button('← Scenarios',rangePicker),h('div',{class:'training-meta',text:`${scenario.title} · ${step.name} · ${street+1}/4`}),
+        h('progress',{class:'session-progress',max:4,value:street,'aria-label':'Streets completed'}),
         para(scenario.note),cardRow(RANGE_HERO),para(step.action));
       if(step.board.length)host.append(cardRow(step.board,{size:'mini'}));
       host.append(h('h3',{text:'Allocate 100% across the possible hands'}),para(street===0?'Start with combination counts, removing your cards. Each available combo starts equally likely within this teaching range.':'How does this action change the weights? Less likely does not mean impossible.'));

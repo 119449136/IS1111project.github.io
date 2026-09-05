@@ -23,6 +23,18 @@ import { trainingHub, trainingProgress } from './training.js';
 export function renderSetup(app) {
   const root = clear(qs('#setup-body'));
   const s = app.settings;
+  root.append(h('div', { class:'lobby-intro' },
+    h('img',{class:'lobby-photo',src:'assets/poker-room.webp',alt:'',fetchpriority:'high'}),
+    h('div',{class:'ambient-motes','aria-hidden':'true'},
+      Array.from({length:9},(_,i)=>h('i',{style:{
+        '--x':`${38+(i*19)%59}%`,'--y':`${12+(i*23)%76}%`,
+        '--duration':`${19+(i*7)%17}s`,'--delay':`${-i*4.7}s`,
+        '--drift':`${i%2 ? -24 : 32}px`,'--size':`${i%3===0?3:2}px`
+      }}))),
+    h('div', { class:'eyebrow', text:'NO-LIMIT HOLD’EM' }),
+    h('h2', {}, 'Make your next', h('em', {text:'move count.'})),
+    h('p', {text:'Your table. Your pace. A little better every hand.'}),
+    h('span',{class:'cinema-edition',text:'OBSIDIAN EDITION'})));
 
   const playerButtons = h('div', { class: 'chip-row' },
     [2, 3, 4, 5, 6, 7, 8, 9].map((n) => h('button', {
@@ -56,8 +68,12 @@ export function renderSetup(app) {
   const lineup = pickBots(s.playerCount - 1, () => 0.5);
 
   root.append(
+    h('div', {class:'session-banner'},
+      h('span',{class:'session-symbol','aria-hidden':'true',text:'♠'}),
+      h('div',{},h('span',{class:'eyebrow',text:'PRACTICE TABLE'}),h('h2',{text:`${s.playerCount}-handed · ${Math.round(s.startingStack/s.bigBlind)}bb`}),h('p',{text:'Simulated chips · No real-money stakes'})),
+      h('span',{class:'session-tag',text:'CASH GAME'})),
     h('div', { class: 'card-panel' },
-      h('h2', { text: 'Table' }),
+      h('h2', { text: 'Set your table' }),
       h('p', { class: 'sub', text: 'Set the game up the way you want to practise it.' }),
       h('div', { class: 'field' },
         h('label', { text: 'Players at the table' }),
@@ -81,7 +97,7 @@ export function renderSetup(app) {
       h('h2', { text: 'Your opponents' }),
       h('p', { class: 'sub', text: 'Each bot plays a consistent, recognisable style. Learning to spot them is half the game.' }),
       lineup.map((bot) => h('div', { class: 'opp-row' },
-        h('div', { class: 'av', text: bot.emoji }),
+        h('div', { class: 'av', text: bot.name.slice(0,1) }),
         h('div', { style: { flex: '1' } },
           h('div', { class: 'nm', text: bot.name }),
           h('div', { class: 'st', text: bot.style }),
@@ -285,7 +301,7 @@ export function renderPractice(app) {
   const oppPanel = h('div', { class: 'card-panel' });
   for (const bot of BOT_PROFILES) {
     oppPanel.append(h('div', { class: 'opp-row' },
-      h('div', { class: 'av', text: bot.emoji }),
+      h('div', { class: 'av', text: bot.name.slice(0,1) }),
       h('div', { style: { flex: '1' } },
         h('div', { class: 'nm', text: `${bot.name} - ${bot.style}` }),
         h('div', { class: 'bl', text: bot.blurb }),
@@ -448,6 +464,7 @@ export function showSettings(app) {
       h('div', { class: 'hint', id: 'coach-hint', style: { marginTop: '9px' }, text: coachHint(s.coachMode) })),
     h('div', { class: 'card-panel' },
       h('h2', { text: 'Display' }),
+      toggle('animations', 'Cinematic motion', 'Card deals, board reveals and moving chips. Respects reduced-motion settings.'),
       toggle('fourColourDeck', 'Four-colour deck', 'Each suit gets its own colour, which makes flush draws obvious.'),
       toggle('autoAdvance', 'Deal the next hand automatically', 'Skips the pause after hands you played cleanly.')),
     h('div', { class: 'card-panel' },

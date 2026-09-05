@@ -19,6 +19,7 @@ export const DEFAULT_SETTINGS = {
   coachMode: 'instant',   // instant | end-of-hand | off
   showEquity: true,
   sound: false,
+  animations: true,
   fourColourDeck: false,
   autoAdvance: false,
 };

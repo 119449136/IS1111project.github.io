@@ -66,6 +66,7 @@ export function cardNode(card, { size = '', faceDown = false, fourColour = false
   return h('div', {
     class: classes.join(' '),
     role: 'img',
+    data: { corner: RANKS[r] + SUIT_GLYPHS[s] },
     'aria-label': `${RANKS[r]} of ${['clubs', 'diamonds', 'hearts', 'spades'][s]}`,
   }, h('span', { class: 'r', text: RANKS[r] }), h('span', { class: 's', text: SUIT_GLYPHS[s] }));
 }

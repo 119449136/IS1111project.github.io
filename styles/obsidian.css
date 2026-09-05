@@ -1,0 +1,76 @@
+/* Obsidian edition: quiet surfaces, emerald actions, warm photographic light. */
+:root {
+  --bg:#090b0b; --bg-raised:#111414; --bg-card:#171a1a; --bg-elevated:#222626;
+  --line:#393f3e; --line-soft:#292e2d;
+  --text:#f2f1eb; --text-dim:#b4bcb8; --text-faint:#929d97;
+  --gold:#d1bc93; --good:#78d7ae; --bad:#eea09a; --warn:#dec18c;
+  --emerald:#116448; --platinum:#d9dfdb;
+}
+body,#app { background:var(--bg); }
+::selection { background:#25755688; }
+button:focus-visible,summary:focus-visible,input:focus-visible,select:focus-visible { outline-color:#8adbb8; }
+.scroll { scrollbar-color:#3b4440 transparent; }
+.brand-mark,.mobile-mark,.eyebrow,.session-symbol,.tile-action,.skill-meter b { color:var(--platinum); }
+.lobby-intro { border-color:#ffffff1c; box-shadow:0 20px 55px #0006; }
+.lobby-intro::before { background:linear-gradient(90deg,#080a09ed,#0a0c0bb5 46%,#0b0d0c08),linear-gradient(0deg,#080b0a88,transparent 65%); }
+.lobby-intro h2 em { color:#f0e9da; }
+.lobby-intro p,.tile-copy span { color:#c5cdc7; }
+.cinema-edition { color:#b8c2bb; }
+.card-panel,.stat,.hand-row,.review,.training-lesson { background:#171a1a; border-color:#ffffff10; box-shadow:0 8px 24px #0002; }
+.session-banner { background:linear-gradient(90deg,#161c19fc,#161c19ed 55%,#161c1940),url('../assets/poker-study.webp') right 60%/cover; border-color:#ffffff16; }
+.session-banner p { color:#b3beb6; }
+.session-tag { color:#c1cbc4; border-color:#ffffff24; }
+.chip-toggle { background:#ffffff04; border-color:#ffffff12; }
+.chip-toggle[aria-pressed=true] { background:#1c342a; border-color:#648575; color:#e3eee7; box-shadow:none; }
+.btn.primary { background:#116448; border-color:#40866c; color:#f4faf6; box-shadow:inset 0 1px 0 #ffffff14,0 5px 14px #0003; }
+.btn.primary:hover { background:#187554; filter:none; }
+.screen-foot { background:linear-gradient(0deg,#090b0b 65%,#090b0be8); }
+.tabbar { background:#161a18f5; border-color:#ffffff14; }
+.tabbar button { color:#a8b3ac; }
+.tabbar button[aria-selected=true] { color:#edf5ef; background:#24332b; }
+.opp-row .av,.opp-row:nth-child(3n) .av,.opp-row:nth-child(3n + 1) .av { background:#292f2b; border-color:#ffffff18; color:#d8e0d9; }
+.training-tile { background:#151a17!important; border-color:#ffffff1c; }
+.training-tile::before { background:linear-gradient(90deg,#0b100df2,#0b100dbe 55%,#0b100d55),linear-gradient(0deg,#0b100df0,transparent 70%); }
+.training-tile .tile-icon,.training-tile[data-kind] .tile-icon { background:#1e2822c9; color:#d4dfd6; border-color:#ffffff24; }
+.training-choices .btn { background:#1b211e; border-color:#ffffff1c; }
+.training-choices .btn.answer-correct { background:#17392b; border-color:#6cad8e; color:#d0f3df; }
+.training-choices .btn.answer-review { background:#342723; border-color:#b18770; color:#f0c2a9; }
+.training-feedback:not(:empty) { background:#20241f; border-color:#82795a66; }
+.training-feedback[data-result=correct] { background:#172b21; border-color:#608c7466; }
+.training-weight input { background:#222824; }
+.session-progress,.skill-meter progress,progress::-webkit-progress-bar { background:#2b332e; }
+progress::-webkit-progress-value { background:#71b28e; }
+progress::-moz-progress-bar { background:#71b28e; }
+.range-grid div.in { background:#85b79a; color:#08170e; }
+#screen-table { background:#090d0b; }
+#screen-table::before { background:linear-gradient(#080c0ab8,#080c0af0),url('../assets/poker-room.webp') center/cover; }
+.table-head .pill { background:#1b211de8; }
+.felt { border-color:#8e92705c; box-shadow:inset 0 0 70px #00100f99,0 0 0 7px #262c27,0 0 0 8px #9d998353,0 0 0 15px #131714,0 0 0 16px #77807420,0 24px 60px #000b; }
+.felt::before { content:''; position:absolute; inset:0; border-radius:inherit; pointer-events:none; background:radial-gradient(ellipse at 35% 25%,#e7dcab14,transparent 65%); opacity:.35; animation:feltLight 19s ease-in-out infinite alternate; }
+.seat .plate { background:linear-gradient(145deg,#2a302bfa,#141915fa); border-color:#ffffff24; }
+.seat .pos { background:#343d35; }
+.seat.acting .plate { box-shadow:0 0 0 1px #d1bc9390,0 6px 18px #0005; }
+.coach-strip { background:#181e1a; border-color:#ffffff1c; }
+.actionbar { background:#101511ed; }
+.actionbar .btn.fold { background:#302320; color:#ecb0a4; }
+.actionbar .btn.check { background:#24332b; color:#d3e6d8; }
+.sheet { background:#171c18; }
+.sheet-foot { background:#121713; }
+.pot-line { background:#142019eb; color:#ead9b5; }
+.ambient-motes { position:absolute; inset:0; z-index:-1; overflow:hidden; pointer-events:none; }
+.ambient-motes i { position:absolute; left:var(--x); top:var(--y); width:var(--size); height:var(--size); border-radius:50%; background:#f4dfb4; opacity:0; box-shadow:0 0 5px #f4dfb440; animation:dustDrift var(--duration) var(--delay) linear infinite; }
+@keyframes dustDrift {
+  0% { opacity:0; transform:translate3d(0,26px,0); }
+  20% { opacity:.28; }
+  55% { opacity:.12; }
+  78% { opacity:.24; }
+  100% { opacity:0; transform:translate3d(var(--drift),-48px,0); }
+}
+@keyframes feltLight { from { opacity:.25; } to { opacity:.8; } }
+html[data-page-hidden=true] *,html[data-page-hidden=true] *::before,html[data-page-hidden=true] *::after { animation-play-state:paused!important; }
+html[data-motion=off] .ambient-motes { display:none; }
+@media (hover:hover) {
+  .training-tile:hover,.chip-toggle:hover,.hand-row:hover { border-color:#889f8e88; }
+}
+@media (min-width:760px) { .tabbar,.tabbar.hidden { background:none; } }
+@media (prefers-reduced-motion:reduce) { .ambient-motes { display:none; } }

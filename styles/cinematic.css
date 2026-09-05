@@ -1,0 +1,61 @@
+/* Photographic assets remain separate from legible, functional game elements. */
+.lobby-intro { isolation:isolate; position:relative; overflow:hidden; min-height:300px; border-radius:24px; padding:32px 26px!important; margin:0 0 20px!important; display:flex; flex-direction:column; justify-content:center; box-shadow:0 20px 55px #0005; border:1px solid #d5c08c30; }
+.lobby-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:60% center; z-index:-3; animation:roomBreathe 24s ease-in-out infinite alternate; }
+.lobby-intro::before { content:''; position:absolute; inset:0; z-index:-2; background:linear-gradient(90deg,#050d15ee 0%,#07131bba 45%,#08121808 100%),linear-gradient(0deg,#04111799,transparent 60%); }
+.lobby-intro::after { content:''; position:absolute; inset:-25%; z-index:-1; background:linear-gradient(110deg,transparent 45%,#edc8750c 50%,transparent 58%); pointer-events:none; animation:lightPass 15s ease-in-out infinite alternate; }
+.lobby-intro h2 { font-size:clamp(36px,5vw,62px); text-shadow:0 4px 20px #0008; }
+.lobby-intro p { max-width:240px; color:#c5cdc9; font-size:14px; }
+.cinema-edition { margin-top:20px; font-size:9px; letter-spacing:.22em; color:#c9b584; }
+.session-banner { background:linear-gradient(90deg,#102824fa,#102824ee 55%,#10282455),url('../assets/poker-study.webp') right 60%/cover; }
+.training-tile { isolation:isolate; overflow:hidden; min-height:218px; border-color:#bea67638; background:#102029!important; }
+.training-photo { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:65% center; z-index:-3; transition:transform .7s cubic-bezier(.2,.65,.3,1); }
+.training-tile::before { content:''; position:absolute; inset:0; z-index:-2; background:linear-gradient(90deg,#07131bf0,#07131bc9 55%,#07131b55),linear-gradient(0deg,#07131bf0,transparent 70%); }
+.training-tile[data-kind=practice] .training-photo { object-position:100% 70%; transform:scale(1.12); }
+.training-tile[data-kind=theory] .training-photo { object-position:40% center; }
+.training-tile[data-kind=odds] .training-photo { object-position:95% center; }
+.training-tile .tile-icon { background:#0a1928b0; backdrop-filter:blur(5px); border-color:#ddc99c40; }
+.tile-copy strong { text-shadow:0 2px 10px #000; font-size:19px; }
+.tile-copy span { color:#bac8cc; }
+.tile-action { align-self:end; }
+.training > .card-row { background:linear-gradient(#06392acc,#032319bb),url('../assets/poker-felt.webp') center/cover; box-shadow:inset 0 0 35px #00150bb0,0 10px 25px #0002; }
+#screen-table { position:relative; isolation:isolate; background:#081318; }
+#screen-table::before { content:''; position:absolute; inset:0; z-index:-2; background:linear-gradient(#071119b0,#061016e8),url('../assets/poker-room.webp') center/cover; }
+.felt { background:radial-gradient(ellipse at 48% 35%,#2b7a5620,#001d1d99),url('../assets/poker-felt.webp') center/cover; border-color:#bda47c66; box-shadow:inset 0 0 70px #00100f99,0 0 0 7px #25312e,0 0 0 8px #ad94775c,0 0 0 15px #151c1d,0 0 0 16px #77807420,0 24px 60px #000b; }
+.felt::after { border-color:#d9ca9430; box-shadow:inset 0 0 0 1px #0002; }
+.seat .plate { background:linear-gradient(145deg,#283333f5,#0d1a23f5); border-color:#b7aa802e; }
+.seat.acting .plate::before { content:''; position:absolute; inset:-4px; border:1px solid #e9ce8980; border-radius:15px; animation:actingGlow 2s ease-in-out infinite; pointer-events:none; }
+.pcard { background:linear-gradient(135deg,#fffef5,#e9e5d7); border:1px solid #c7c5b2; box-shadow:0 1px 0 #fff,0 3px 0 #a4ab9f,0 7px 16px #0007; }
+.pcard:not(.back)::after { content:attr(data-corner); position:absolute; bottom:4px; right:4px; font-size:calc(var(--w) * .18); transform:rotate(180deg); font-weight:700; }
+.pcard .r { align-self:flex-start; padding-left:calc(var(--w) * .12); font-size:calc(var(--w) * .35); }
+.pcard .s { font-size:calc(var(--w) * .4); }
+.pcard.back { background:linear-gradient(#102f2850,#102f2850),url('../assets/poker-felt.webp') center/250px; border:2px solid #d6d5c4; }
+.pcard.back::after { inset:3px; border-color:#cfb4778c; border-radius:3px; }
+.board-area { perspective:800px; }
+#table-effects { position:absolute; inset:0; pointer-events:none; z-index:8; overflow:hidden; }
+.flying-chips { position:absolute; width:45px; height:40px; will-change:left,top,transform; filter:drop-shadow(0 5px 4px #0009); }
+.flying-chips .disc { position:absolute; width:23px; height:23px; border:3px dashed #e4d4af; border-radius:50%; background:#72342f; box-shadow:0 3px 0 #42251f,inset 0 0 0 2px #bf8a6d; transform:rotateX(28deg); }
+.flying-chips .disc:nth-child(2) { left:10px; top:4px; background:#173e39; }
+.flying-chips .disc:nth-child(3) { left:3px; top:-4px; }
+.flying-chips span { position:absolute; top:25px; left:0; right:0; font-size:11px; text-align:center; color:#f4e4b5; font-weight:700; text-shadow:0 2px 4px #000; }
+.seat.winner .seat-cards { filter:drop-shadow(0 0 8px #efd48960); }
+.pot-line { background:linear-gradient(160deg,#172621ec,#071e1de0); border-color:#c2ab794d; color:#f0dfba; padding:7px 18px; }
+.training-feedback:not(:empty) { animation:feedbackLift .4s cubic-bezier(.2,.8,.2,1); }
+@keyframes roomBreathe { from { transform:scale(1); } to { transform:scale(1.07) translateX(-1%); } }
+@keyframes lightPass { from { transform:translateX(-15%); opacity:.3; } to { transform:translateX(15%); opacity:1; } }
+@keyframes actingGlow { 0%,100% { opacity:.35; } 50% { opacity:1; } }
+@keyframes feedbackLift { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+@media (hover:hover) { .training-tile:hover .training-photo { transform:scale(1.08); } .training-tile[data-kind=practice]:hover .training-photo { transform:scale(1.18); } }
+@media (min-width:760px) {
+  #setup-body .lobby-intro { grid-column:1/-1; min-height:310px; padding:34px 40px!important; }
+  #setup-body .session-banner { grid-column:1/-1; min-height:105px; }
+  .lobby-photo { object-position:center 55%; }
+  .lobby-intro p { max-width:none; }
+  .training-menu .training-tile:first-child { min-height:248px; }
+}
+@media (min-width:1200px) {
+  #setup-body .lobby-intro { grid-column:1/-1; min-height:330px; }
+  #setup-body .session-banner { grid-column:1/-1; }
+}
+@media (max-width:370px) { .lobby-intro { padding:25px 20px!important; min-height:280px; } .lobby-intro h2 { font-size:33px; } }
+html[data-motion=off] *,html[data-motion=off] *::before,html[data-motion=off] *::after { animation:none!important; transition:none!important; }
+@media (prefers-reduced-motion:reduce) { *,*::before,*::after { animation:none!important; transition:none!important; } }

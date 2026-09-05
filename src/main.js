@@ -7,6 +7,7 @@ import { loadProfile, saveProfile, loadSettings, saveSettings } from './storage.
 import { Game } from './ui/game.js';
 import { renderSetup, renderProgress, renderPractice, renderHistory, showSettings } from './ui/views.js';
 import { qs, qsa, closeSheet, isSheetOpen } from './ui/dom.js';
+import { icon } from './ui/icons.js';
 
 class App {
   constructor() {
@@ -22,15 +23,18 @@ class App {
 
   updateSettings(patch) {
     this.settings = { ...this.settings, ...patch };
+    document.documentElement.dataset.motion = this.settings.animations ? 'on' : 'off';
     saveSettings(this.settings);
   }
 
   /** Show one screen and render it. The table screen hides the tab bar. */
   show(name) {
+    if (this.screen === 'table' && name !== 'table') this.game.clearTimers();
     this.screen = name;
+    qs('#app').dataset.view = name;
     for (const el of qsa('.screen')) el.classList.toggle('active', el.id === `screen-${name}`);
     for (const btn of qsa('.tabbar button')) {
-      btn.setAttribute('aria-selected', String(btn.dataset.screen === name));
+      btn.setAttribute('aria-selected', String(btn.dataset.screen === name || (name === 'table' && btn.dataset.screen === 'setup')));
     }
     qs('.tabbar').classList.toggle('hidden', name === 'table');
     this.refreshCurrentScreen();
@@ -60,11 +64,15 @@ class App {
 
 function boot() {
   const app = new App();
+  document.documentElement.dataset.motion = app.settings.animations ? 'on' : 'off';
   window.__pokerApp = app;
 
   for (const btn of qsa('.tabbar button')) {
+    const glyph = btn.querySelector('.ico');
+    glyph.replaceChildren(icon(({setup:'play',progress:'progress',practice:'practice',history:'history'})[btn.dataset.screen]));
     btn.addEventListener('click', () => app.show(btn.dataset.screen));
   }
+  for (const id of ['#setup-settings','#table-settings']) qs(id).replaceChildren(icon('settings'));
   qs('#deal-in').addEventListener('click', () => app.startGame());
   qs('#setup-settings').addEventListener('click', () => showSettings(app));
   qs('#leave-table').addEventListener('click', () => app.leaveTable());
@@ -81,6 +89,7 @@ function boot() {
   // Pause the bots when the app is backgrounded so a hand does not race
   // forward while the phone is locked.
   document.addEventListener('visibilitychange', () => {
+    document.documentElement.dataset.pageHidden = String(document.hidden);
     if (document.hidden) app.game.clearTimers();
     else if (app.screen === 'table' && app.game.table && !app.game.table.handComplete) app.game.step();
   });

@@ -14,6 +14,7 @@ import {
 import { botAction, pickBots } from '../bots.js';
 import { reviewDecision, summariseHand } from '../coach.js';
 import { recordHand } from '../stats.js';
+import { TableMotion } from './motion.js';
 import { h, qs, clear, cardNode, cardRow, chips, signed, haptic, openSheet, closeSheet } from './dom.js';
 
 const BOT_THINK_MIN = 420;
@@ -32,6 +33,7 @@ export class Game {
     this.sizingKey = null;
     this.revealAll = false;
     this.busy = false;
+    this.motion = new TableMotion(() => this.settings);
   }
 
   get settings() { return this.app.settings; }
@@ -41,6 +43,7 @@ export class Game {
   /** Seat a new table using the current settings. */
   newSession() {
     this.clearTimers();
+    this.motion.last = null;
     const { playerCount, startingStack, bigBlind } = this.settings;
     const bots = pickBots(playerCount - 1, this.rng);
     this.table = createTable({
@@ -96,6 +99,7 @@ export class Game {
   }
 
   clearTimers() {
+    this.motion?.stop();
     for (const t of this.timers) clearTimeout(t);
     this.timers = [];
   }
@@ -324,6 +328,7 @@ export class Game {
 
     this.renderSeats();
     this.renderBoard();
+    this.motion.update(t);
   }
 
   renderSeats() {
@@ -379,7 +384,7 @@ export class Game {
     const pot = totalPot(t);
     area.append(h('div', { class: 'street-tag', text: t.handComplete ? 'Showdown' : t.street }));
     area.append(h('div', { class: 'card-row' },
-      t.board.map((c) => cardNode(c, { size: '', fourColour: this.settings.fourColourDeck, animate: true }))));
+      t.board.map((c) => cardNode(c, { size: '', fourColour: this.settings.fourColourDeck }))));
     if (pot > 0) area.append(h('div', { class: 'pot-line', text: `Pot ${chips(pot)}` }));
   }
 
