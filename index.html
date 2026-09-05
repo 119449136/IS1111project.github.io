@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Poker Trainer</title>
 <meta name="description" content="Play no-limit hold'em against bots and get your decisions graded, hand by hand.">
-<meta name="theme-color" content="#0b0e13">
+<meta name="theme-color" content="#090b0b">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,21 +14,25 @@
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <link rel="stylesheet" href="styles/app.css">
+<link rel="stylesheet" href="styles/premium.css">
+<link rel="stylesheet" href="styles/cinematic.css">
+<link rel="stylesheet" href="styles/obsidian.css">
 </head>
 <body>
 
 <div id="app">
+  <div class="brand-rail" aria-hidden="true"><span class="brand-mark">♠</span><span>POKER<small>THE STUDY ROOM</small></span><span class="rail-caption">Play with intention.</span></div>
 
   <!-- Setup ------------------------------------------------------------- -->
   <section class="screen active" id="screen-setup">
     <header class="topbar">
-      <h1>Poker Trainer</h1>
+      <h1><span class="mobile-mark">♠</span> POKER <small>THE STUDY ROOM</small></h1>
       <span class="spacer"></span>
       <button class="icon-btn" id="setup-settings" aria-label="Settings">&#9881;</button>
     </header>
     <div class="scroll" id="setup-body"></div>
     <div class="screen-foot">
-      <button class="btn primary wide" id="deal-in">Deal me in</button>
+      <button class="btn primary wide" id="deal-in">Take your seat <span aria-hidden="true">→</span></button>
     </div>
   </section>
 
@@ -46,6 +50,7 @@
       <div class="felt"></div>
       <div id="seats"></div>
       <div class="board-area" id="board"></div>
+      <div id="table-effects" aria-hidden="true"></div>
     </div>
     <div class="coach-strip" id="coach"></div>
     <div class="actionbar" id="actionbar"></div>
@@ -53,19 +58,19 @@
 
   <!-- Progress ---------------------------------------------------------- -->
   <section class="screen" id="screen-progress">
-    <header class="topbar"><h1>Progress</h1></header>
+    <header class="topbar"><h1>Progress <small>YOUR GAME, OVER TIME</small></h1></header>
     <div class="scroll" id="progress-body"></div>
   </section>
 
   <!-- Practice ---------------------------------------------------------- -->
   <section class="screen" id="screen-practice">
-    <header class="topbar"><h1>Practice</h1></header>
+    <header class="topbar"><h1>Practice <small>THE TRAINING ROOM</small></h1></header>
     <div class="scroll" id="practice-body"></div>
   </section>
 
   <!-- History ----------------------------------------------------------- -->
   <section class="screen" id="screen-history">
-    <header class="topbar"><h1>Hands</h1></header>
+    <header class="topbar"><h1>Hand journal <small>EVERY DECISION TELLS A STORY</small></h1></header>
     <div class="scroll" id="history-body"></div>
   </section>
 

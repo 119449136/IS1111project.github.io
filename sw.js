@@ -6,12 +6,20 @@
  * background so a deployed update is picked up on the next launch.
  */
 
-const VERSION = 'poker-trainer-v2-training';
+const VERSION = 'poker-trainer-v5-obsidian';
 const ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
   './styles/app.css',
+  './styles/premium.css',
+  './styles/cinematic.css',
+  './styles/obsidian.css',
+  './src/ui/motion.js',
+  './assets/poker-room.webp',
+  './assets/poker-felt.webp',
+  './assets/poker-study.webp',
+  './src/ui/icons.js',
   './icons/icon.svg',
   './src/main.js',
   './src/cards.js',
@@ -42,7 +50,7 @@ self.addEventListener('install', (event) => {
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys()
-      .then((keys) => Promise.all(keys.filter((k) => k !== VERSION).map((k) => caches.delete(k))))
+      .then((keys) => Promise.all(keys.filter((k) => k.startsWith('poker-trainer-') && k !== VERSION).map((k) => caches.delete(k))))
       .then(() => self.clients.claim()),
   );
 });
